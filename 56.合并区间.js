@@ -1,6 +1,7 @@
 // @algorithm @lc id=56 lang=javascript 
 // @title merge-intervals
 import * as a from 'algm'
+// @test([[1,4],[5,6]])=[[1,4],[5,6]]
 // @test([[1,3],[2,6],[8,10],[15,18]])=[[1,6],[8,10],[15,18]]
 // @test([[1,3],[2,6],[8,10],[15,18]])=[[1,6],[8,10],[15,18]]
 // @test([[1,4],[4,5]])=[[1,5]]
@@ -8,38 +9,39 @@ import * as a from 'algm'
  * @param {number[][]} intervals
  * @return {number[][]}
  */
-var merge = function (intervals) {
-  const result = [];
-  const n = intervals.length;
-  intervals.sort((a, b) => a[0] - b[0])
-  for (let i = 0; i < n; i++) {
-    let cur = intervals[i];
-    if (i === n - 1) {
-      // 到达最后一个区间，直接 push
-      result.push(intervals[i]);
-      return result;
-    }
-    let next = intervals[i + 1];
-    if (canMerge(cur, next)) {
-      // 可以合并,合并到下一个区间
-      const [x, y] = mergeTwoIntervals(cur, next);
-      next[0] = x;
-      next[1] = y;
-    } else {
-      // 不能合并，产生结果
-      result.push(cur);
-    }
+function merge(intervals) {
+  const MAX_VAL = 200000;
+  const starts = new Array(MAX_VAL + 1).fill(0);
+  const ends = new Array(MAX_VAL + 1).fill(0);
+  
+  // 标记所有边界点
+  for (const [s, e] of intervals) {
+      starts[s]++;
+      ends[e]++;
   }
+  
+  const result = [];
+  let currentStart = -1;
+  /**
+   * count 是一个重叠层数计数器，它的核心作用是：
+   * ​跟踪当前 position 被多少个区间同时覆盖​（即“重叠次数”）。
+   * 理解这一点后，整个算法的逻辑会变得非常清晰。
+   */
+  let count = 0;
+  
+  for (let i = 0; i <= MAX_VAL; i++) {
+      // 先处理所有入站（开始事件）
+      if (starts[i] > 0) {
+          if (count === 0) currentStart = i; // 从空到有
+          count += starts[i];
+      }
+      
+      // 后处理出站（结束事件）
+      if (ends[i] > 0) {
+          count -= ends[i];
+          if (count === 0) result.push([currentStart, i]); // 从有到空
+      }
+  }
+  
   return result;
-};
-
-// 合并两个区间
-function mergeTwoIntervals(a, b) {
-  // 两个可以合并的区间，合并为一个区间，左右边界取最小和最大
-  return [Math.min(a[0], b[0]), Math.max(a[1], b[1])];
-}
-
-// 区间是否重叠？【可合并】
-function canMerge(a, b) {
-  return a[1] >= b[0];
 }
