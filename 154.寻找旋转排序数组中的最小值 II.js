@@ -1,4 +1,4 @@
-// @algorithm @lc id=154 lang=javascript 
+// @algorithm @lc id=154 lang=javascript
 // @title find-minimum-in-rotated-sorted-array-ii
 // @test([1,3,5])=1
 // @test([2,2,2,0,1])=0
@@ -10,23 +10,22 @@
  * @param {number[]} nums
  * @return {number}
  */
-var findMin = function(nums) {
-  const len = nums.length;
-  if (len === 1) return nums[0];
-  // * len >= 2
-  if (nums[len-1] > nums[0]) return nums[0] // * 旋转len次
-  // * 旋转 1 ~ len-1 次
-  let left = 0;
-  let right = len - 1;
-  while (left < right) {
-    const mid = left + ((right - left) >> 1)
-    if (nums[mid] == nums[right]) {
-      right--;
-    } else if (nums[mid] > nums[right]) {
-      left = mid + 1;
+var findMin = function (nums) {
+  let l = 0;
+  let r = nums.length - 1;
+  /**
+   * 最小值右侧的所有元素 <= nums[r]；
+   * 最小值左侧的所有元素 >= nums[r];
+   */
+  while (l < r) {
+    const mid = l + ((r - l) >> 1);
+    if (nums[mid] < nums[r]) {
+      r = mid;
+    } else if (nums[mid] > nums[r]) {
+      l = mid + 1;
     } else {
-      right = mid
+      r--;
     }
   }
-  return nums[left]
+  return nums[l];
 };

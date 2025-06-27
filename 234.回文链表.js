@@ -1,63 +1,61 @@
-/*
- * @lc app=leetcode.cn id=234 lang=javascript
- *
- * [234] 回文链表
- */
-
-// @lc code=start
+// @algorithm @lc id=234 lang=javascript
+// @title palindrome-linked-list
+import { ListNode } from 'algm';
+// @test([1,2,2,1])=true
+// @test([1,2])=false
 /**
  * Definition for singly-linked list.
- * function ListNode(val) {
- *     this.val = val;
- *     this.next = null;
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
  * }
  */
 /**
  * @param {ListNode} head
  * @return {boolean}
  */
-// const {
-//   transferListToArray,
-//   getLinkedListFromArray
-// } = require('./linked-list-utils');
-
 var isPalindrome = function (head) {
-  function reverseList(head) {
-    let list = null;
-    while (head) {
-      const tmp = head;
-      head = head.next;
-      tmp.next = list;
-      list = tmp;
+  if (!head || !head.next) return true; // 空链表或单节点链表是回文
+  let left = head;
+  let right = getRight(head);
+  let reverseRight = reverse(right);
+  
+  while (left !== right) {
+    if (left.val !== reverseRight.val) {
+      return false; // 如果有不相等的值，返回 false
     }
-    return list;
+    left = left.next; // 移动到下一个节点
+    reverseRight = reverseRight.next; // 移动到下一个节点
   }
-
-  function getRightList(head) {
-    let fast = head;
-    let slow = head;
-
-    while (fast && fast.next) {
-      fast = fast.next.next;
-      slow = slow.next;
-    }
-    return slow;
-  }
-
-  if (!head || !head.next) return true;
-  const rightList = getRightList(head);
-  // console.log('rightList => ', transferListToArray(rightList));
-  // console.log('before reverse, head => ', transferListToArray(head));
-  let reversed = reverseList(rightList);
-  let prev = head;
-  while (reversed && head) {
-    if (reversed.val !== head.val) return false;
-    prev = head;
-    reversed = reversed.next;
-    head = head.next;
-  }
-  return head ? head.val === prev.val : true;
+  return true;
 };
-// isPalindrome(getLinkedListFromArray([1, 2, 3, 3, 2, 1]));
-// isPalindrome(getLinkedListFromArray([1, 2, 3, 4, 3, 2, 1]));
-// @lc code=end
+
+function reverse(head) {
+  let res = null;
+  let cur = head;
+  while (cur) {
+    const next = cur.next;
+    cur.next = res;
+    res = cur;
+    cur = next;
+  }
+  return res;
+}
+/**
+ * 找到链表的右半部分的头节点
+ * 区分奇数和偶数长度的链表
+ * @param {*} head
+ */
+function getRight(head) {
+  if (!head || !head.next) return head;
+  // 快慢指针法
+  let slow = head;
+  let fast = head;
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+  }
+  // 如果是奇数长度，slow指向中间节点，如 1->2->3, slow 指向 2—>3;
+  // 如果是偶数长度，slow指向右半部分的头节点，如 1->2->3->4, slow 指向 3->4;
+  return slow;
+}

@@ -10,22 +10,25 @@
  * @return {number[][]}
  */
 var permuteUnique = function (nums) {
-  const result = new Map();
+  const set = new Set();
+  const result = [];
   function backtrack(path = [], selectList = []) {
-    if (selectList.length === 0) {
-      // result.push(path);
-      let stringPath = path.toString();
-      if (!result.has(stringPath)) {
-        result.set(stringPath, true);
+    if (path.length === nums.length) {
+      // console.log('>>>>>', path);
+      if (!set.has(path.toString())) {
+        result.push(path.slice()); //! PS: 此处一定要 slice或concat 浅拷贝
+        set.add(path.toString())
       }
     } else {
       for (let i = 0; i < selectList.length; i++) {
-        backtrack(path.concat(selectList[i]), selectList.slice(0, i).concat(selectList.slice(i + 1)));
+        path.push(selectList[i]);
+        backtrack(path, selectList.slice(0, i).concat(selectList.slice(i + 1)));
+        path.pop();
       }
     }
   }
   backtrack([], nums);
-  return [...result.keys()].map((str) => str.split(','));
+  return result;
 };
 
 // permuteUnique([1, 1, 2]);

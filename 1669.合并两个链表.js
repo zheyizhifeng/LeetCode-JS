@@ -1,10 +1,12 @@
-/*
- * @lc app=leetcode.cn id=1669 lang=javascript
- *
- * [1669] 合并两个链表
- */
-
-// @lc code=start
+// @algorithm @lc id=1765 lang=javascript
+// @title merge-in-between-linked-lists
+import * as a from 'algm';
+import { ListNode } from 'algm';
+// @test([10,1,13,6,9,5], 3, 4, [1000000,1000001,1000002])=[10,1,13,1000000,1000001,1000002,5]
+// @test([10,1,13,6,9,5], 3, 4, [1000000,1000001,1000002])=[10,1,13,1000000,1000001,1000002,5]
+// @test([10,1,13,6,9,5], 3, 4, [1000000,1000001,1000002])=[10,1,13,1000000,1000001,1000002,5]
+// @test([10,1,13,6,9,5],3,4,[1000000,1000001,1000002])=[10,1,13,1000000,1000001,1000002,5]
+// @test([0,1,2,3,4,5,6],2,5,[1000000,1000001,1000002,1000003,1000004])=[0,1,1000000,1000001,1000002,1000003,1000004,6]
 /**
  * Definition for singly-linked list.
  * function ListNode(val, next) {
@@ -19,43 +21,28 @@
  * @param {ListNode} list2
  * @return {ListNode}
  */
-// const {
-//   ListNode,
-//   transferListToArray,
-//   getLinkedListFromArray,
-// } = require('./linked-list-utils');
 var mergeInBetween = function (list1, a, b, list2) {
-  const dummy = new ListNode('head');
-  dummy.next = list1;
-  let head = dummy;
-  let left = null;
-  let right = null;
-  let index = 0;
-  while (head) {
-    if (index === a) {
-      left = head;
-    }
-    if (index === b) {
-      right = head.next;
-    }
-    index++;
-    head = head.next;
+  let cur = list2;
+  while (cur && cur.next) {
+    cur = cur.next;
   }
-  left.next = list2;
-  while (list2.next) {
-    list2 = list2.next;
+  let pos = 1;
+  let pa = list1; // 指向a前一个节点
+  while (pos < a) {
+    pa = pa.next;
+    pos++;
   }
-  list2.next = right.next;
-  // console.log('dummy.next => ', transferListToArray(dummy.next));
-  return dummy.next;
+  let diff = b - a + 2;
+  let pb = pa; // 指向b后一个节点
+  while (diff > 0 && pb) {
+    pb = pb.next;
+    diff--;
+  }
+  if (pa) {
+    pa.next = list2;
+  }
+  if (cur) {
+    cur.next = pb;
+  }
+  return list1;
 };
-// const l1 = getLinkedListFromArray([0, 1, 2, 3, 4, 5,6]);
-// const l2 = getLinkedListFromArray([
-//   1000000,
-//   1000001,
-//   1000002,
-//   1000003,
-//   1000004,
-// ]);
-// mergeInBetween(l1, 2, 5, l2);
-// @lc code=end

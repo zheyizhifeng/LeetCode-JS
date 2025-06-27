@@ -1,51 +1,37 @@
-/*
- * @lc app=leetcode.cn id=101 lang=javascript
- *
- * [101] 对称二叉树
- */
-
-// @lc code=start
+// @algorithm @lc id=101 lang=javascript 
+// @title symmetric-tree
+import * as a from 'algm'
+import { TreeNode } from 'algm'
+// @test([9,-42,-42,null,76,76,null,null,13,null,13])=false
+// @test([9,-42,-42,null,76,76,null,null,13,null,13])=false
+// @test([1,2,2,3,4,4,3])=true
+// @test([1,2,2,null,3,null,3])=false
 /**
  * Definition for a binary tree node.
- * function TreeNode(val) {
- *     this.val = val;
- *     this.left = this.right = null;
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
  * }
  */
 /**
  * @param {TreeNode} root
  * @return {boolean}
  */
-/* var isSymmetric = function (root) {
-  if (!root) return true;
-  function compare(leftRoot, rightRoot) {
-    if (!leftRoot && !rightRoot) return true;
-    else if (!leftRoot || !rightRoot) return false;
-    else {
-      // leftRoot && rightRoot
-      return (
-        leftRoot.val === rightRoot.val &&
-        compare(leftRoot.left, rightRoot.right) &&
-        compare(leftRoot.right, rightRoot.left)
-      );
+var isSymmetric = function(root) {
+    // 尝试使用迭代实现
+    if (!root) return true;
+    const stack = [[root.left, root.right]];
+    while(stack.length) {
+      const [left, right] = stack.shift();
+      if (left && !right) return false;
+      if (!left && right) return false;
+      if (!left && !right) {
+        continue
+      };
+      if (left.val !== right.val) return false;
+      stack.push([left.left, right.right])
+      stack.push([left.right, right.left])
     }
-  }
-  return compare(root.left, root.right);
-}; */
-
-var isSymmetric = function (root) {
-  if (!root) return true;
-  const queue = [root.left, root.right];
-  while (queue.length > 0) {
-    const leftRoot = queue.shift();
-    const rightRoot = queue.shift();
-    if (!leftRoot && !rightRoot) continue;
-    if (!leftRoot || !rightRoot || leftRoot.val !== rightRoot.val) return false;
-    queue.push(leftRoot.left);
-    queue.push(rightRoot.right);
-    queue.push(leftRoot.right);
-    queue.push(rightRoot.left);
-  }
-  return true;
+    return true;
 };
-// @lc code=end

@@ -1,37 +1,38 @@
-/*
- * @lc app=leetcode.cn id=21 lang=javascript
- *
- * [21] 合并两个有序链表
- */
-
-// @lc code=start
+// @algorithm @lc id=21 lang=javascript
+// @title merge-two-sorted-lists
+import * as a from 'algm';
+import { ListNode } from 'algm';
+// @test([2], [1])=[1,2]
+// @test([1,2,4],[1,3,4])=[1,1,2,3,4,4]
+// @test([],[])=[]
+// @test([],[0])=[0]
 /**
  * Definition for singly-linked list.
- * function ListNode(val) {
- *     this.val = val;
- *     this.next = null;
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
  * }
  */
 /**
- * @param {ListNode} l1
- * @param {ListNode} l2
+ * @param {ListNode} list1
+ * @param {ListNode} list2
  * @return {ListNode}
  */
-var mergeTwoLists = function (l1, l2) {
-  let head = new ListNode('head');
-  const copyHead = head;
-  while (l1 && l2) {
-    const v1 = l1.val;
-    const v2 = l2.val;
-    if (v1 < v2) {
+
+function mergeTwoLists(l1, l2) {
+  let dummy = new ListNode();
+  let head = dummy;
+  while (l1 || l2) {
+    let v1 = l1 ? l1.val : Infinity;
+    let v2 = l2 ? l2.val : Infinity;
+    if (v1 <= v2) {
+      dummy.next = new ListNode(v1);
       l1 = l1.next;
     } else {
+      dummy.next = new ListNode(v2);
       l2 = l2.next;
     }
-    head.next = new ListNode(Math.min(v1, v2));
-    head = head.next;
+    dummy = dummy.next;
   }
-  head.next = l1 || l2;
-  return copyHead.next;
-};
-// @lc code=end
+  return head.next;
+}

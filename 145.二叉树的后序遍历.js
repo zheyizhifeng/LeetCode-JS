@@ -1,10 +1,11 @@
-/*
- * @lc app=leetcode.cn id=145 lang=javascript
- *
- * [145] 二叉树的后序遍历
- */
-
-// @lc code=start
+// @algorithm @lc id=145 lang=javascript
+// @title binary-tree-postorder-traversal
+import * as a from 'algm';
+import { TreeNode } from 'algm';
+// @test([1,null,2,3])=[3,2,1]
+// @test([1,2,3,4,5,null,8,null,null,6,7,9])=[4,6,7,5,2,9,8,3,1]
+// @test([])=[]
+// @test([1])=[1]
 /**
  * Definition for a binary tree node.
  * function TreeNode(val, left, right) {
@@ -18,31 +19,15 @@
  * @return {number[]}
  */
 var postorderTraversal = function (root) {
-  /**
-   * 递归
-   * 
-  
-  let result = [];
-  function traverse(root) {
-    if (!root) return [];
-    traverse(root.left);
-    traverse(root.right);
-    result.push(root.val);
-  }
-  traverse(root);
-  return result; */
-
-  /**
-   * 迭代
-   *
-   */
   if (!root) return [];
   const result = [];
   const stack = [root];
-  // 后序遍历是父节点需要最后被遍历。但其实可以跟前序遍历的实现方式上差不多，
-  // 只不过在插入数组中，我们总是在头部插入，这样先被插入的节点值一定是相对于左右孩子后面的。
-  // 后序：left->right->root, 所以按照unshift，顺序应该是root->left->right
-  while (stack.length > 0) {
+  /**
+   * 后序：左 右 根
+   * 栈序：根 右 左
+   * JS 的 unshift 可以实现头部插入
+   */
+  while(stack.length) {
     const node = stack.pop();
     result.unshift(node.val);
     if (node.left) {
@@ -53,41 +38,4 @@ var postorderTraversal = function (root) {
     }
   }
   return result;
-
-  /**
-   * 迭代，带有visited标志位
-   * 
-  const result = [];
-  const stack = [];
-  if (!root) return [];
-  stack.push({
-    node: root,
-    visited: false,
-  });
-  while (stack.length > 0) {
-    const { node, visited } = stack.pop();
-    if (visited) {
-      result.push(node.val);
-    } else {
-      // left->right->root => stack: root->right->left
-      stack.push({
-        node,
-        visited: true,
-      });
-      if (node.right) {
-        stack.push({
-          node: node.right,
-          visited: false,
-        });
-      }
-      if (node.left) {
-        stack.push({
-          node: node.left,
-          visited: false,
-        });
-      }
-    }
-  }
-  return result */
 };
-// @lc code=end

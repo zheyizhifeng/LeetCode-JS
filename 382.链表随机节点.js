@@ -32,13 +32,14 @@ var Solution = function (head) {
  * @return {number}
  */
 Solution.prototype.getRandom = function () {
-  const randomIndex = Math.ceil(Math.random() * this.count);
-  for (let i = 1; i < randomIndex; i++) {
+  const randomIndex = Math.floor(Math.random() * this.count);
+  let result;
+  for (let i = 0; i < randomIndex; i++) {
     this.head = this.head.next;
   }
-  const tmp = this.head.val;
-  this.head = this.headCopy;
-  return tmp;
+  result = this.head.val;
+  this.head = this.headCopy
+  return result
 };
 
 /**

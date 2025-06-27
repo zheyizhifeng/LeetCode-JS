@@ -16,26 +16,6 @@
  * @param {TreeNode} root
  * @return {number[][]}
  */
-/* var levelOrder = function (root) {
-  if (!root) return [];
-
-  function levelOfTree(root) {
-    if (!root) return 0;
-    return Math.max(levelOfTree(root.left), levelOfTree(root.right)) + 1;
-  }
-  let height = levelOfTree(root);
-  const result = Array.from(Array(height), () => []);
-  function traverse(node, row) {
-    if (row < height) {
-      result[row].push(node.val);
-      node.left && traverse(node.left, row + 1);
-      node.right && traverse(node.right, row + 1);
-    }
-  }
-  traverse(root, 0);
-  return result;
-}; */
-
 var levelOrder = function (root) {
   if (!root) return [];
   const queue = [root];

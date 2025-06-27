@@ -17,14 +17,15 @@
  * @return {ListNode}
  */
 var deleteDuplicates = function (head) {
-  const headCopy = head;
-  while (head) {
-    if (head.next && head.val === head.next.val) {
-      head.next = head.next.next;
+  if (!head || !head.next) return head;
+  let cur = head;
+  while(cur && cur.next) {
+    if (cur.val === cur.next.val) {
+      cur.next = cur.next.next; // 跳过重复的节点
     } else {
-      head = head.next;
+      cur = cur.next; // 移动到下一个节点
     }
   }
-  return headCopy;
+  return head;
 };
 // @lc code=end

@@ -1,43 +1,18 @@
-/*
- * @lc app=leetcode.cn id=62 lang=javascript
- *
- * [62] 不同路径
- */
-
-// @lc code=start
+// @algorithm @lc id=62 lang=javascript
+// @title unique-paths
+import * as a from 'algm';
+// @test(3,7)=28
+// @test(3,2)=3
 /**
  * @param {number} m
  * @param {number} n
  * @return {number}
  */
 var uniquePaths = function (m, n) {
-  // dp[i][j] 从(0,0)走到(i,j)的路径总数
-  /*   const dp = [];
-  for (let i = 0; i < n; i++) {
-    dp.push(new Array(m));
-    for (let j = 0; j < m; j++) {
-      if (i === 0 || j === 0) {
-        // 紧邻边界只有一条路径，往下或者往右
-        dp[i][j] = 1;
-      } else {
-        dp[i][j] = dp[i][j - 1] + dp[i - 1][j];
-      }
-    }
+  // 求 C(m+n-2, m-1)
+  let res = 1;
+  for (let i = 1; i <= m - 1; i++) {
+    res = (res * (n - 1 + i)) / i;
   }
-  return dp[n - 1][m - 1]; */
-
-  // 优化空间复杂度
-  const dp = [1];
-  for (let i = 0; i < n; i++) {
-    for (let j = 1; j < m; j++) {
-      if (i === 0) {
-        dp[j] = 1;
-      } else {
-        dp[j] = dp[j] + dp[j - 1];
-      }
-    }
-    console.log(dp);
-  }
-  return dp[m - 1];
+  return Math.round(res)
 };
-// @lc code=end

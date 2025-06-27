@@ -1,10 +1,10 @@
-/*
- * @lc app=leetcode.cn id=141 lang=javascript
- *
- * [141] 环形链表
- */
-
-// @lc code=start
+// @algorithm @lc id=141 lang=javascript 
+// @title linked-list-cycle
+import * as a from 'algm'
+import { ListNode } from 'algm'
+// @test([3,2,0,-4],1)=true
+// @test([1,2],0)=true
+// @test([1],-1)=false
 /**
  * Definition for singly-linked list.
  * function ListNode(val) {
@@ -17,29 +17,13 @@
  * @param {ListNode} head
  * @return {boolean}
  */
-
-// var hasCycle = function(head) {
-//     let map = new Map()
-//     while(head) {
-//       if (map.has(head)) {
-//         return true
-//       }
-//       map.set(head, true)
-//       head = head.next
-//     }
-//     return false
-// };
-
-var hasCycle = function (head) {
-  let fastP = head;
-  let slowP = head;
-  while (fastP && fastP.next && fastP.next.next) {
-    slowP = slowP.next;
-    fastP = fastP.next.next;
-    if (slowP === fastP) {
-      return true;
+var hasCycle = function(head) {
+    const set = new Set();
+    let cur = head;
+    while(cur) {
+        if (set.has(cur)) return true;
+        set.add(cur);
+        cur = cur.next;
     }
-  }
-  return false;
+    return false;
 };
-// @lc code=end

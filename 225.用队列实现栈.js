@@ -8,41 +8,38 @@
 /**
  * Initialize your data structure here.
  */
-var MyStack = function () {
-  this.stack = [];
+let MyStack = function () {
+  this.queue = [];
+  this._queue = [];
 };
 
-/**
- * Push element x onto stack.
- * @param {number} x
- * @return {void}
- */
 MyStack.prototype.push = function (x) {
-  this.stack.push(x);
+  this.queue.push(x);
 };
 
-/**
- * Removes the element on top of the stack and returns that element.
- * @return {number}
- */
 MyStack.prototype.pop = function () {
-  return this.stack.pop();
+  // 例如：【1,2,3】 
+  // _queue: [1,2], queue: [3], 
+  // ans = queue.shift() 栈顶是 3, queue = [];
+
+  // queue: [1,2], _queue = []; 
+  // 整个过程下来，扣掉了栈顶的元素
+  while (this.queue.length > 1) {
+    this._queue.push(this.queue.shift());
+  }
+  let ans = this.queue.shift();
+  while (this._queue.length) {
+    this.queue.push(this._queue.shift());
+  }
+  return ans;
 };
 
-/**
- * Get the top element.
- * @return {number}
- */
 MyStack.prototype.top = function () {
-  return this.stack[this.stack.length - 1];
+  return this.queue.slice(-1)[0];
 };
 
-/**
- * Returns whether the stack is empty.
- * @return {boolean}
- */
 MyStack.prototype.empty = function () {
-  return this.stack.length === 0;
+  return !this.queue.length;
 };
 
 /**

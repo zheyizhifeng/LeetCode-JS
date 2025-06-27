@@ -10,50 +10,41 @@
  * @return {string[][]}
  */
 var solveNQueens = function (n) {
-  // row 表示当前选择的行
-  // 路径：path 中⼩于 row 的那些⾏都已经成功放置了皇后
-  // 选择列表：第 row ⾏的所有列都是放置皇后的选择
-  // 结束条件：row === n
   const result = [];
-  function isValid(path, row, col) {
-    // 检查col列是否能放置皇后
-    for (let i = 0; i < path.length; i++) {
-      if (path[i][col] === 'Q') {
-        return false;
-      }
+  const board = Array.from({ length: n }, () => Array(n).fill('.'));
+
+  function isValid(board, row, col) {
+    // 检查列
+    for (let i = 0; i < row; i++) {
+      if (board[i][col] === 'Q') return false;
     }
-    // 检查(row, col)是否在path中皇后的左下方
-    for (let i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
-      if (path[i][j] === 'Q') {
-        return false;
-      }
-    }
-    // 检查是否在右下
+    // 检查左上对角线
     for (let i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
-      if (path[i][j] === 'Q') {
-        return false;
-      }
+      if (board[i][j] === 'Q') return false;
+    }
+    // 检查右上对角线
+    for (let i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
+      if (board[i][j] === 'Q') return false;
     }
     return true;
   }
-  function backtrack(path = Array(n).fill('.'.repeat(n)), row) {
+
+  function backtrack(board, row) {
     if (row === n) {
-      result.push(path);
-    } else {
-      for (let col = 0; col < n; col++) {
-        if (!isValid(path, row, col)) {
-          continue;
-        }
-        path[row] = path[row].substring(0, col) + 'Q' + path[row].slice(col + 1);
-        backtrack(path.slice(), row + 1);
-        path[row] = path[row].replace('Q', '.');
-      }
+      // 转成字符串数组
+      result.push(board.map(r => r.join('')));
+      return;
+    }
+    for (let col = 0; col < n; col++) {
+      if (!isValid(board, row, col)) continue;
+      board[row][col] = 'Q';
+      backtrack(board, row + 1);
+      board[row][col] = '.';
     }
   }
-  backtrack(Array(n).fill('.'.repeat(n)), 0);
-  // console.log(result);
+
+  backtrack(board, 0);
   return result;
 };
 
-solveNQueens(8);
 // @lc code=end

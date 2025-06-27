@@ -22,17 +22,18 @@
 //   transferListToArray,
 //   getLinkedListFromArray,
 // } = require('./linked-list-utils');
-function reverse(head) {
-  let list = null;
-  while (head) {
-    const tmp = head;
-    head = head.next;
-    tmp.next = list;
-    list = tmp;
+function reverse(start, end) {
+  // 翻转[start, end)之间的链表
+  let newHead = null;
+  while (start !== end) {
+    const next = start.next;
+    start.next = newHead;
+    newHead = start;
+    start = next;
   }
-  return list;
+  return newHead; // 返回新的头节点
 }
-function getNodes(head) {
+function getLength(head) {
   let count = 0;
   while (head) {
     count++;
@@ -41,31 +42,16 @@ function getNodes(head) {
   return count;
 }
 var reverseKGroup = function (head, k) {
-  const nodes = getNodes(head);
-  if (!head || !head.next || k === 1 || nodes < k) return head;
-  // K >= 2
-  let dummy = new ListNode('head', head);
-  let dummyCopy = dummy;
-  let start = head;
-  let end = head;
-  let count = 0;
-  while (start) {
-    count++;
-    if (count > nodes) break;
-    if (count % k === 0) {
-      // 到达end
-      const tmp = end.next;
-      end.next = null;
-      dummy.next = reverse(start);
-      dummy = start;
-      start.next = tmp;
-      start = tmp;
-      end = tmp;
-    } else {
-      end = end.next;
-    }
+  if (k === 1 || !head) return head;
+  let left = head;
+  let right = head;
+  for (let i = 0; i < k; i++) {
+    if (!right) return head; // 如果剩余节点不足k个，直接返回
+    right = right.next; // 找到当前组的右端
   }
-  return dummyCopy.next;
+  const newHead = reverse(left, right); // 翻转当前组
+  left.next = reverseKGroup(right, k); // 递归处理剩余部分
+  return newHead; // 返回新的头节点
 };
 // const head = getLinkedListFromArray([1, 2, 3, 4, 5]);
 // reverseKGroup(head, 2);

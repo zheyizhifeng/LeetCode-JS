@@ -1,31 +1,43 @@
-/*
- * @lc app=leetcode.cn id=20 lang=javascript
- *
- * [20] 有效的括号
- */
-
-// @lc code=start
+// @algorithm @lc id=20 lang=javascript
+// @title valid-parentheses
+import * as a from 'algm';
+// @test("[{()}]")=true
+// @test("([)]")=false
+// @test("()")=true
+// @test("()[]{}")=true
+// @test("(]")=false
+// @test("([])")=true
+// @test("([)]")=false
 /**
  * @param {string} s
  * @return {boolean}
  */
 var isValid = function (s) {
-  let map = new Map();
-  map.set(')', '(');
-  map.set(']', '[');
-  map.set('}', '{');
-  let stack = [];
+  const stack = [];
+  const left = new Set(['(', '[', '{']);
+  const right = new Set([')', ']', '}']);
   for (let c of s) {
-    if (map.has(c)) {
-      // 右括号
-      const top = stack.pop();
-      if (map.get(c) !== top) {
-        return false;
-      }
-    } else {
+    if (left.has(c)) {
       stack.push(c);
+    } else if (right.has(c)) {
+      if (stack.length === 0) return false;
+      const leftBracket = stack.pop();
+      switch (c) {
+        case ')':
+          if (leftBracket !== '(') return false;
+          break;
+        case ']':
+          if (leftBracket !== '[') return false;
+
+          break;
+        case '}':
+          if (leftBracket !== '{') return false;
+          break;
+
+        default:
+          break;
+      }
     }
   }
   return stack.length === 0;
 };
-// @lc code=end

@@ -10,36 +10,32 @@
  * @param {number} amount
  * @return {number}
  */
-/* var coinChange = function (coins, amount) {
-  // 递归
-  let cache = new Map()
-  cache.set(0, 0)
-  function f(x) {
-    if (x < 0) return Infinity;
-    if (cache.has(x)) return cache.get(x)
-    let min = Infinity;
-    for (const coin of coins) {
-      let tmp = f(x - coin) + 1;
-      if (tmp < min) {
-        min = tmp;
-      }
-    }
-    cache.set(x, min)
-    return min;
-  }
-  return f(amount) === Infinity ? -1 : f(amount);
-};
- */
 
-var coinChange = function (coins, amount) {
-  const dp = Array(amount + 1).fill(Infinity);
+var coinChange = function (coins, target) {
+  const min = Math.min(...coins);
+  if (target === 0) return 0;
+  if (target < min) return -1;
+  const dp = Array(target + 1).fill(Infinity);
   dp[0] = 0;
-  for (let coin of coins) {
-    for (let i = coin; i <= amount; i++) {
+  for (let i = 1; i <= target; i++) {
+    // target 过小
+    if (i < min) {
+      dp[i] = -1;
+      continue;
+    }
+    for (let coin of coins) {
+      // 币值过大
+      if (coin > i) continue;
+      // 剩余无法凑出
+      if (dp[i - coin] === -1) continue;
       dp[i] = Math.min(dp[i], dp[i - coin] + 1);
     }
+    if (dp[i] === Infinity) {
+      dp[i] = -1;
+    }
   }
-  return dp[amount] === Infinity ? -1 : dp[amount];
+  // console.log('dp >>>' ,dp)
+  return dp[target]
 };
 
 // @lc code=end

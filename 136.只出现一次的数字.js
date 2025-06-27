@@ -14,6 +14,7 @@
 }; */
 
 // 更高明的按位异或解法
+// n ^ n = 0, 0 ^ n = n;
 var singleNumber = function (nums) {
   return nums.reduce((a, b) => a ^ b);
 };

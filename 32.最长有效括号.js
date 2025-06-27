@@ -1,10 +1,9 @@
-/*
- * @lc app=leetcode.cn id=32 lang=javascript
- *
- * [32] 最长有效括号
- */
-
-// @lc code=start
+// @algorithm @lc id=32 lang=javascript 
+// @title longest-valid-parentheses
+import * as a from 'algm'
+// @test("(()")=2
+// @test(")()())")=4
+// @test("")=0
 /**
  * @param {string} s
  * @return {number}
@@ -12,30 +11,34 @@
 var longestValidParentheses = function (s) {
   const len = s.length;
   let longest = '';
-
-  // 定义dp[i] 表示以s[i]结尾的最长有效括号串长度
-  for (let i = 0; i < len; i++) {
-    if (s[i] !== ')') {
-      dp[i] = 0;
-    } else {
-      // s[i] === ')'
-      if (s[i - 1] === '(') {
-        // ....() 模式
-        dp[i] = dp[i - 2] + 2;
+  /**
+   * 方案 1：暴力遍历，超时了
+   */
+  // 检查子串是否有效
+  /* function isValid(str) {
+    let leftCount = 0;
+    for (let c of str) {
+      if (c === '(') {
+        leftCount++;
       } else {
-        // s[i-1] === ')'
-        // ...)) 模式
-        if (s[i - 2] === ')') {
-          // ...))) 模式
-          dp[i] = 1;
-        } else {
-          // s[i-2] === '('
-          // ...())模式
-          dp[i] = dp[i - dp[i - 1] - 2] + dp[i - 1] + 2;
-        }
+        leftCount--;
+        if (leftCount < 0) return false;
+      }
+    }
+    return leftCount === 0;
+  }
+  // 检查所有子串
+  for (let i = 0; i < len; i++) {
+    for (let j = i; j < len; j++) {
+      const str = s.slice(i, j + 1);
+      if(isValid(str) && str.length > longest.length) {
+        longest = str;
       }
     }
   }
-  return dp[s.length - 1];
+  return longest.length; */
+
+  /**
+   * 方案 2：
+   */
 };
-// @lc code=end

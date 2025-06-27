@@ -10,50 +10,53 @@
  * @return {string}
  */
 var minWindow = function (s, t) {
-  if (s.length < t.length) return ''; // * 长度条件不满足，直接排除
-  const need = new Map(); // * 需要覆盖的字符频次 map
-  const window = new Map(); // * 滑动窗口的字符频次 map
-  let validCount = 0; // ! 若 validCount === need.size,表示 window 完全覆盖了 need 的所有字符
-
+  let need = {},
+    window = {};
   for (let c of t) {
-    need.set(c, need.has(c) ? need.get(c) + 1 : 1);
+    need[c] = (need[c] || 0) + 1;
   }
 
-  let l = 0; // * s 的滑动窗口左侧
-  let r = 0; // * s 的滑动窗口右侧，注意此处，下标从【0】开始
-  let start = 0; // * 指向目标子串开头
-  let minLength = Infinity;
-  // ! 最终返回的目标子串 ans = s.slice(start, start + minLength)
+  let left = 0,
+    right = 0;
+  let valid = 0;
+  // 记录最小覆盖子串的起始索引及长度
+  let start = 0,
+    len = Infinity;
+  while (right < s.length) {
+    // c 是将移入窗口的字符
+    let c = s[right];
+    // 扩大窗口
+    right++;
+    // 进行窗口内数据的一系列更新
+    if (need[c]) {
+      // c 是有效字符
+      window[c] = (window[c] || 0) + 1;
+      if (window[c] === need[c]) {
+        // 数量满足了,有效加一个
+        valid++;
+      }
+    }
 
-  while (r <= s.length) { // ! 注意[left, right)的区间，right为实际下标的下一位, 故而可以取到 s.length
-    if (validCount === need.size) {
-      // * window 包含了 need
-      const leftChar = s[l];
-      if (r - l < minLength) {
-        start = l;
-        minLength = r - l;
+    // 判断左侧窗口是否要收缩
+    while (valid === Object.keys(need).length) {
+      // 在这里更新最小覆盖子串
+      if (right - left < len) {
+        start = left;
+        len = right - left;
       }
-      if (window.has(leftChar)) {
-        if (window.get(leftChar) === need.get(leftChar)) {
-          validCount--;
+      // d 是将移出窗口的字符
+      let d = s[left];
+      // 缩小窗口
+      left++;
+      // 进行窗口内数据的一系列更新
+      if (need[d]) {
+        if (window[d] === need[d]) {
+          valid--;
         }
-        window.set(leftChar, window.get(leftChar) - 1);
+        window[d]--;
       }
-
-      l++;
-    } else {
-      // * window 未包含 need
-      if (r < s.length) {
-        const rightChar = s[r];
-        if (need.has(rightChar)) {
-          window.set(rightChar, window.has(rightChar) ? window.get(rightChar) + 1 : 1);
-          if (window.get(rightChar) === need.get(rightChar)) {
-            validCount++;
-          }
-        }
-      }
-      r++;
     }
   }
-  return minLength === Infinity ? '' : s.slice(start, start + minLength);
+  // 返回最小覆盖子串
+  return len === Infinity ? '' : s.substring(start, start + len);
 };

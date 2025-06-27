@@ -11,55 +11,36 @@
  * @return {number}
  */
 
-// 暴力枚举计算，不够优化，循环次数为|n|
+// 折半递归
 /* var myPow = function (x, n) {
-  if (x === 0 || x === 1) return x;
-  if (x === -1) return n % 2 === 1 ? -1 : 1;
-  len = n < 0 ? -n : n;
-  let mul = 1;
-  for (let i = 0; i < len; i++) {
-    mul = mul * x;
-  }
-  return n < 0 ? 1 / mul : mul;
+  if (n === 0) return 1;
+
+  let pow = Math.abs(n);
+
+  let result = pow % 2 === 0 ? myPow(x * x, pow / 2) : myPow(x * x, (pow - 1) / 2) * x;
+
+  return n < 0 ? 1 / result : result;
 }; */
-
-// 递归计算, 直接递归n次会爆栈，要减少迭代次数
-//   var myPow = function (x, n) {
-//   if (n === 0) return 1;
-//   if (n < 0) {
-//     // console.log(":>>> ", x, -n);
-//     return 1 / myPow(x, -n);
-//   }
-//   if (n % 2 === 1) {
-//     // 奇数幂次
-//     // console.log(":>>> ", x, n - 1);
-
-//     return x * myPow(x, n - 1);
-//   } else {
-//     // 偶数幂次
-//     // console.log(":>>> ", x * x, n / 2);
-
-//     return myPow(x * x, n / 2);
-//   }
-// };
-
-// 直接折半
 var myPow = function (x, n) {
-  let len = n < 0 ? -n : n;
-  let mul = 1;
-  while (len !== 0) {
-    if (len % 2 === 0) {
+  if (n === 0) return 1;
+  if (n === 1) return x;
+  let pow = Math.abs(n);
+  let result = 1;
+  while (pow > 1) {
+    // x^n = > x^(n/2)^2
+    if (pow % 2 === 0) {
+      // pow is even
       x = x * x;
-      len /= 2;
-      // console.log(mul, x, len);
+      pow = pow >>> 1;
     } else {
-      mul *= x;
+      // pow is odd
+      result *= x;
       x = x * x;
-      len = (len - 1) / 2;
-      // console.log(mul, x, len);
+      pow = (pow - 1) >>> 1;
     }
   }
-  return n < 0 ? 1 / mul : mul;
+  result *= x;
+  return n < 0 ? 1 / result : result;
 };
 
 // @lc code=end
