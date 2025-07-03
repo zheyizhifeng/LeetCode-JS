@@ -10,24 +10,14 @@
  * @return {number}
  */
 var climbStairs = function (n) {
-  /*   const dp = [];
-  // 定义dp[i] 表示爬到第i阶的方法数
+  const dp = Array(n + 1).fill(0);
+  // dp[i] 表示爬到 i 楼的方案数
+  // 目标: dp[n]
+  dp[0] = 1;
   dp[1] = 1;
-  dp[2] = 2;
-  for (let i = 3; i <= n; i++) {
-    dp[i] = dp[i - 1] + dp[i - 2];
+  for (let i = 2; i <= n; i++) {
+    dp[i] = dp[i-1] + dp[i-2]
   }
-  return dp[n]; */
-
-  if (n === 1) return 1;
-  if (n === 2) return 2;
-  let one = 1;
-  let two = 2;
-  for (let i = 3; i <= n; i++) {
-    let sum = one + two;
-    one = two;
-    two = sum;
-  }
-  return two;
+  return dp[n];
 };
 // @lc code=end
