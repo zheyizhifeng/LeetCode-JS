@@ -41,7 +41,6 @@ var rand10 = function () {
     if (num <= 20) return (num % 10) + 1;
   }
 
-  return (random % 10) + 1;
 };
 
 /* 另一种巧妙解法
