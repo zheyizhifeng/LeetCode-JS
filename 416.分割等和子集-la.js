@@ -41,7 +41,7 @@ var canPartition = function (nums) {
     for (let j = 0; j <= target; j++) {
       // 对于每个 nums[i]，要么选要么不选
       // 不选： dp[i][j] = dp[i-1][j]
-      // 选：那就要看前 i-1个【从 0～i-2】元素是否能凑出 j-第i个元素的和 => j-nums[i-1], 需要判断 j 和 nums[i-1]的大小
+      // 选：那就要看前 i-1个【从 0~i-2】元素是否能凑出 j-第i个元素的和 => j-nums[i-1], 需要判断 j 和 nums[i-1]的大小
       if (j >= nums[i - 1]) {
         dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i - 1]]
       } else {
