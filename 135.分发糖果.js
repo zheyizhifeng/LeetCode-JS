@@ -9,18 +9,28 @@
  * @param {number[]} ratings
  * @return {number}
  */
-var candy = function (ratings) {
-  const candyList = new Array(ratings.length).fill(1);
-  for (let i = 1; i < ratings.length; i++) {
-    if (ratings[i] > ratings[i - 1]) {
-      candyList[i] = candyList[i - 1] + 1;
+function candy(arr) {
+  const n = arr.length;
+  if (n === 0) return 0;
+  if (n === 1) return 1;
+
+  const candies = new Array(n).fill(1);
+
+  // 左到右遍历，处理左边的约束
+  for (let i = 1; i < n; i++) {
+    if (arr[i] > arr[i - 1]) {
+      candies[i] = candies[i - 1] + 1;
     }
   }
-  for (let i = ratings.length - 1; i >= 1; i--) {
-    if (ratings[i] < ratings[i - 1]) {
-      candyList[i - 1] = Math.max(candyList[i - 1], candyList[i] + 1);
+
+  // 右到左遍历，处理右边的约束，并取最大值
+  for (let i = n - 2; i >= 0; i--) {
+    if (arr[i] > arr[i + 1]) {
+      candies[i] = Math.max(candies[i], candies[i + 1] + 1);
     }
   }
-  return candyList.reduce((acc, cur) => acc + cur, 0);
-};
+
+  // 计算总糖果数
+  return candies.reduce((sum, num) => sum + num, 0);
+}
 // @lc code=end
