@@ -10,12 +10,18 @@
  * @return {number}
  */
 var removeDuplicates = function (nums) {
-  let i = 0;
-  for (let j = 0; j < nums.length; j++) {
-    if (nums[j] !== nums[i]) {
-      nums[++i] = nums[j];
+  // nums.length >= 1;
+  let slow = 0;
+  let fast = 0;
+  while (fast < nums.length) {
+    if (nums[fast] !== nums[slow]) {
+      slow++;
+      // 维护 nums[0...slow] 无重复
+      nums[slow] = nums[fast];
+    } else {
+      fast++;
     }
   }
-  return i + 1;
+  return slow + 1;
 };
 // @lc code=end

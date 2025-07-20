@@ -10,11 +10,19 @@
  * @return {void} Do not return anything, modify nums in-place instead.
  */
 var moveZeroes = function (nums) {
-  for (var i = nums.length; i--; ) {
-    if (nums[i] === 0) {
-      nums.splice(i, 1);
-      nums.push(0);
+  // nums.length >= 1
+  const n = nums.length;
+  let slow = 0; // 不等于 0 的长度
+  let fast = 0;
+  while (fast < n) {
+    if (nums[fast] !== 0) {
+      nums[slow] = nums[fast];
+      slow++;
     }
+    fast++;
   }
-};
+  for (let i = slow; i < n; i++) {
+      nums[i] = 0;
+  }
+}
 // @lc code=end
