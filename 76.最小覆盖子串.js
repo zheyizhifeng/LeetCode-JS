@@ -1,62 +1,61 @@
-// @algorithm @lc id=76 lang=javascript
+// @algorithm @lc id=76 lang=javascript 
 // @title minimum-window-substring
 // @test("ADOBECODEBANC","ABC")="BANC"
 // @test("a","a")="a"
 // @test("a","aa")=""
-// @test("abc", "cba")="abc"
 /**
  * @param {string} s
  * @param {string} t
  * @return {string}
  */
 var minWindow = function (s, t) {
-  let need = {},
-    window = {};
+  // 排除长度条件不满足的情况
+  if (s.length < t.length) return ''
+  // 统计 t 的频次表
+  let needMap = new Map();
   for (let c of t) {
-    need[c] = (need[c] || 0) + 1;
+    needMap.set(c, (needMap.get(c) || 0) + 1);
   }
-
-  let left = 0,
-    right = 0;
+  // 当前滑动窗口
+  let window = new Map();
+  // 当前已满足条件的字符总数
   let valid = 0;
-  // 记录最小覆盖子串的起始索引及长度
-  let start = 0,
-    len = Infinity;
-  while (right < s.length) {
-    // c 是将移入窗口的字符
-    let c = s[right];
-    // 扩大窗口
-    right++;
-    // 进行窗口内数据的一系列更新
-    if (need[c]) {
-      // c 是有效字符
-      window[c] = (window[c] || 0) + 1;
-      if (window[c] === need[c]) {
-        // 数量满足了,有效加一个
-        valid++;
-      }
-    }
+  // 窗口双指针
+  let l = 0, r = 0;
+  let minLen = Infinity;
+  let result = '';
 
-    // 判断左侧窗口是否要收缩
-    while (valid === Object.keys(need).length) {
-      // 在这里更新最小覆盖子串
-      if (right - left < len) {
-        start = left;
-        len = right - left;
-      }
-      // d 是将移出窗口的字符
-      let d = s[left];
-      // 缩小窗口
-      left++;
-      // 进行窗口内数据的一系列更新
-      if (need[d]) {
-        if (window[d] === need[d]) {
-          valid--;
-        }
-        window[d]--;
-      }
+  while (r < s.length) {
+    const char = s[r];
+    //  need 中没有该字符
+    if (!needMap.has(char)) {
+      r++;
+      continue;
     }
+    // 扩大窗口, 更新当前字符 char 的频次： +1
+    window.set(char, (window.get(char) || 0) + 1);
+    // 判断 char 的插入是否满足某个字符达标
+    if (window.get(char) === needMap.get(char)) {
+      valid++;
+    }
+    // 判断是否满足 valid === needMap.size, 如果满足, 要收缩窗口
+    while (valid === needMap.size) {
+      // 更新答案
+      let curLen = r - l + 1;
+      if (curLen < minLen) {
+        minLen = curLen;
+        result = s.slice(l, r + 1);
+      }
+      // 收缩窗口: 只要一直达标，一直收缩
+      const leftChar = s[l];
+      window.set(leftChar, (window.get(leftChar) || 0) - 1);
+      if (needMap.has(leftChar) && window.get(leftChar) < needMap.get(leftChar)) {
+        valid--;
+      }
+      l++;
+    }
+    // 移动右指针
+    r++;
   }
-  // 返回最小覆盖子串
-  return len === Infinity ? '' : s.substring(start, start + len);
+  return result;
 };

@@ -11,10 +11,12 @@ import * as a from 'algm';
  */
 var searchMatrix = function (matrix, target) {
   // 从左下角往上右查找
-  if (matrix.length === 0 || matrix[0].length === 0) return false;
-  let row = matrix.length - 1;
+  const m = matrix.length;
+  const n = matrix[0].length;
+
+  let row = m - 1;
   let col = 0;
-  while(row >= 0 && col < matrix[0].length) {
+  while (row >= 0 && col < n) {
     if (matrix[row][col] === target) {
       return true;
     } else if (matrix[row][col] > target) {

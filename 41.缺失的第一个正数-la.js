@@ -10,27 +10,26 @@
  * @param {number[]} nums
  * @return {number}
  */
-// 思路：一个萝卜一个坑，nums[i] 就呆在 i-1 位置上
-// 数组长度为 n,缺失的最小正整数一定在[1, n + 1]
-// 核心比较：nums[i] === nums[ nums[i] - 1 ]
-var firstMissingPositive = function (nums) {
-  const n = nums.length;
-  for (let i = 0; i < n; i++) {
-    // 对1~nums.length范围内的元素进行安排
-    // 已经出现在理想位置的，就不用交换
-    while (nums[i] >= 1 && nums[i] <= n && nums[i] !== nums[nums[i] - 1]) {
-      let j = nums[i] - 1;
-      // 交换
-      [nums[i], nums[j]] = [nums[j], nums[i]];
+var firstMissingPositive = function(nums) {
+    const n = nums.length;
+    for (let i = 0; i < n; i++) {
+        // 如果当前学生的学号在 [1,n] 中，但（真身）没有坐在正确的座位上
+        while (1 <= nums[i] && nums[i] <= n && nums[i] !== nums[nums[i] - 1]) {
+            // 那么就交换 nums[i] 和 nums[j]，其中 j 是 i 的学号
+            const j = nums[i] - 1; // 减一是因为数组下标从 0 开始
+            [nums[i], nums[j]] = [nums[j], nums[i]];
+        }
     }
-  }
-  for (let i = 0; i < n; i++) {
-    // 第0个元素应该等于 1，
-    // 第1个元素应该等于 2，
-    // 找到第一个下标和数字不匹配的
-    if (nums[i] !== i + 1) return i + 1;
-  }
-  return n + 1; // 发现元素 1~nums.length 占满了数组，一个没缺
+
+    // 找第一个学号与座位编号不匹配的学生
+    for (let i = 0; i < n; i++) {
+        if (nums[i] !== i + 1) {
+            return i + 1;
+        }
+    }
+
+    // 所有学生都坐在正确的座位上
+    return n + 1;
 };
 // @lc code=end
 

@@ -26,19 +26,19 @@ var spiralOrder = function (matrix) {
         for (let i = c1; i <= c2; i++) {
             result.push(matrix[r1][i]);
         }
+        if (r1 === r2) break;
         // 上到下
         for (let i = r1 + 1; i <= r2; i++) {
             result.push(matrix[i][c2]);
         }
-        if (r1 < r2 && c1 < c2) {
-            // 右到左
-            for (let i = c2 - 1; i > c1; i--) {
-                result.push(matrix[r2][i]);
-            }
-            // 下到上
-            for (let i = r2; i > r1; i--) {
-                result.push(matrix[i][c1]);
-            }
+        if (c1 === c2) break;
+        // 右到左
+        for (let i = c2 - 1; i > c1; i--) {
+            result.push(matrix[r2][i]);
+        }
+        // 下到上
+        for (let i = r2; i > r1; i--) {
+            result.push(matrix[i][c1]);
         }
         // 缩小边界
         r1++;
