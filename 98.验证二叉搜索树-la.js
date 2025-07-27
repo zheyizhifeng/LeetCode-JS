@@ -21,21 +21,16 @@
 var isValidBST = function (root) {
   /**
    * 二叉搜索树🌳不是只有当前根节点和左右节点比较，而是和整个左右子树比较，所以需要辅助的 min、max
+   * root.val 比如处于(min, max) 才算合法
    */
-  function isValid(root, min, max) {
-    // 以root 为根的子树节点必须满足:
-    // min.val < root.val < max.val
-    // min: 右子树最小值
-    // max: 左子树最大值
-    if (!root) return true;
-    // 先判断树根🌳，再判断子树
-    if (min && root.val <= min.val) return false;
-    if (max && root.val >= max.val) return false;
+    function isValid(root, min, max) {
+       if (!root) return true;
+       if (root.val <= min) return false;
+       if (root.val >= max) return false;
 
-    // 根树满足后，再判断左右子树
-    return isValid(root.left, min, root) && isValid(root.right, root, max);
-  }
-  return isValid(root, null, null);
+       return isValid(root.left, min, root.val) && isValid(root.right, root.val, max)
+    }
+    return isValid(root, -Infinity, Infinity)
 };
 // @lc code=end
 
