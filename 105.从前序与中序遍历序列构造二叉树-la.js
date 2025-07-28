@@ -5,6 +5,8 @@
  * [105] 从前序与中序遍历序列构造二叉树
  */
 
+const { TreeNode } = require('algm');
+
 // @lc code=start
 /**
  * Definition for a binary tree node.
@@ -19,8 +21,29 @@
  * @param {number[]} inorder
  * @return {TreeNode}
  */
-var buildTree = function(preorder, inorder) {
-    
+var buildTree = function (preorder, inorder) {
+  // 预存中序数组的值到索引的映射
+  const inMap = new Map();
+  inorder.forEach((val, idx) => inMap.set(val, idx));
+
+  // 递归函数（增加参数限制遍历范围）
+  const helper = (preStart, preEnd, inStart, inEnd) => {
+    if (preStart > preEnd) return null;
+    // 前序首元素是当前根
+    const rootVal = preorder[preStart];
+    const root = new TreeNode(rootVal);
+    // 中序中根的位置
+    const rootIdx = inMap.get(rootVal);
+    // 左子树大小 = 中序根左侧元素个数
+    const leftSize = rootIdx - inStart;
+
+    // 分割前序：左子树 [preStart+1, preStart+leftSize]，右子树 [preStart+leftSize+1, preEnd]
+    root.left = helper(preStart + 1, preStart + leftSize, inStart, rootIdx - 1);
+    root.right = helper(preStart + leftSize + 1, preEnd, rootIdx + 1, inEnd);
+    return root;
+  };
+
+  return helper(0, preorder.length - 1, 0, inorder.length - 1);
 };
 // @lc code=end
 
@@ -36,4 +59,3 @@ var buildTree = function(preorder, inorder) {
 // @lcpr case=end
 
  */
-
